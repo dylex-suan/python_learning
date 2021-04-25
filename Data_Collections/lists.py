@@ -57,3 +57,56 @@ del thislist # we delete the entire list
 thislist = ["apple", "banana", "cherry"]
 thislist.clear() # clears the contents, but doesn't undefine thislist
 print(thislist)
+
+# We can loop through a list
+thislist = ["apple", "banana", "cherry"]
+for x in thislist:
+    print(x)
+
+# we may even want to print all items based on the index number
+for i in range(len(thislist)):
+    print(thislist[i])
+
+print("\n")
+for i in range(len(thislist) - 1):
+    print(thislist[i + 1])
+
+print("\n")
+thislist = ["apple", "banana", "cherry"]
+i = 0
+while i < len(thislist):
+    print(thislist[i])
+    i += 1
+
+thislist = ["manna", "kiwi", "36", "banana", "cherry"] # sorting alphanumerically, ascending
+thislist.sort()
+print(thislist)
+
+# for descending, use reverse = True
+thislist.sort(reverse = True)
+print(thislist)
+
+# customizing your own function
+def myfunc(n):
+    return abs(n - 50)
+
+thislist = [100, 50, 65, 82, 23]
+thislist.sort(key = myfunc)
+print(thislist)
+thislist.sort(reverse = True) # we reverse the sort afterwards
+print(thislist)
+
+# copying lists are also possible
+thislist = ["apple", "banana", "cherry"]
+mylist = thislist.copy()
+print(mylist)
+
+# OR
+mylist = list(thislist)
+print(mylist) # works the same way!
+
+# joining two lists
+list1 = ["a", "b", "c"]
+list2 = [1, 2, 3]
+list3 = list1 + list2
+print(list3)
