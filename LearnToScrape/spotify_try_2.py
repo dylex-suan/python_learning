@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# establish the credentials to authorize the user to 
 credentials = json.load(open('./LearnToScrape/JSON_Files/authorization.json'))
 client_id = credentials['client_id']
 client_secret = credentials['client_secret']
@@ -19,16 +20,16 @@ playlists = json.load(
 playlist_uri = playlists[playlist_index]['uri']
 like = playlists[playlist_index]['like']
 
-client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
+client_credentials_manager = SpotifyClientCredentials(
+    client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-
 
 # the URI is split by ':' to get the username and playlist ID
 uri = playlist_uri
 username = uri.split(':')[2]
 playlist_id = uri.split(':')[4]
 
-
+# you must scroll through them to view more than just the max limit
 def get_playlist_tracks(username, playlist_id):
     results = sp.user_playlist_tracks(username, playlist_id)
     tracks = results['items']
@@ -36,12 +37,41 @@ def get_playlist_tracks(username, playlist_id):
         results = sp.next(results)
         tracks.extend(results['items'])
     return tracks
-    
+
+results = get_playlist_tracks(username, playlist_id)
+
+playlist_tracks_id = []
+playlist_tracks_titles = []
+playlist_tracks_artists = []
+playlist_tracks_first_artists = []
+
+# each one is a dictionary so we must iterate through them all!
+for track in range(0, len(results)):
+    # get rid of the ones that are under copyright revision
+    if results[track]['track']['id'] is None:
+        continue
+    else:
+        playlist_tracks_id.append(results[track]['track']['id'])
+        playlist_tracks_titles.append(results[track]['track']['name'])
+        artist_list = []
+        for artist in results[track]['track']['artists']:
+            artist_list.append(artist['name'])
+        playlist_tracks_artists.append(artist_list)
+        playlist_tracks_first_artists.append(artist_list[0])
+
+# testing out formatting to see how I can retrieve each of the features   
+print(playlist_tracks_id)
+print('\n')
+print(playlist_tracks_titles)
+print('\n')
+print(playlist_tracks_artists)
+print('\n')
+print(playlist_tracks_first_artists)
+
+"""
 results = sp.user_playlist(username, playlist_id, 'tracks')
 # Fetch the details of the track like ID's, Titles and Artists
 playlist_tracks_data = results['tracks']
-print(type(results))
-print(type(playlist_tracks_data))
 playlist_tracks_id = []
 playlist_tracks_titles = []
 playlist_tracks_artists = []
@@ -57,6 +87,8 @@ for track in playlist_tracks_data['items']:
     playlist_tracks_artists.append(artist_list)
     playlist_tracks_first_artists.append(artist_list[0])
 
+
+print(playlist_tracks_id)
 # extracting audio features of each track
 features = sp.audio_features(playlist_tracks_id)
 features_df = pd.DataFrame(data=features, columns=features[0].keys())
@@ -72,4 +104,5 @@ features_df = features_df[['id', 'title', 'first_artist', 'all_artists',
                            'duration_ms', 'time_signature']]
 pd.set_option("display.max_rows", None)
 print(features_df)
+"""
 
