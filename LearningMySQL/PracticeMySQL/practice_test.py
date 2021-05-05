@@ -10,21 +10,21 @@ mydb = mysql.connector.connect(
 
 # create the database
 mycursor = mydb.cursor()
-mycursor.execute("CREATE TABLE IF NOT EXISTS trustee_database (name VARCHAR(255), time_served VARCHAR(255), city_rep VARCHAR(255))")
+mycursor.execute("CREATE TABLE IF NOT EXISTS trustee_database (name VARCHAR(255), time_served INT(255), city_rep VARCHAR(255))")
 
 
 sql = "INSERT INTO trustee_database (name, time_served, city_rep) VALUES (%s, %s, %s)"
 val = [
-    ('Brenda Agnew', '3', 'Burlington'),
-    ('Peter DeRosa', '3', 'Oakville'),
-    ('Helena Karabela', '10', 'Oakville'),
-    ('Helena Karabela', '10', 'Oakville'),
-    ('Vincent Iantomasi', '3', 'Burlington'),
-    ('Tim O\'\'Brien', '3', 'Burlington'),
-    ('Janet O\'\'Hearn-Czarnota', '3', 'Halton Hills'),
-    ('Martin Duarte', '3', 'Milton'),
-    ('Patrick Murphy', '3', 'Milton'),
-    ('Nancy Guzzo', '3', 'Oakville')
+    ('Brenda Agnew', 3, 'Burlington'),
+    ('Peter DeRosa', 3, 'Oakville'),
+    ('Helena Karabela', 10, 'Oakville'),
+    ('Helena Karabela', 10, 'Oakville'),
+    ('Vincent Iantomasi', 3, 'Burlington'),
+    ('Tim O\'\'Brien', 3, 'Burlington'),
+    ('Janet O\'\'Hearn-Czarnota', 3, 'Halton Hills'),
+    ('Martin Duarte', 3, 'Milton'),
+    ('Patrick Murphy', 3, 'Milton'),
+    ('Nancy Guzzo', 3, 'Oakville')
 ]
 
 mycursor.executemany(sql, val)
@@ -34,26 +34,15 @@ if (mycursor.rowcount == 1):
 else:
     print(mycursor.rowcount, "records were inserted.")
 
-"""
-mycursor = mydb.cursor()
-sql = "SELECT * FROM trustee_database WHERE time_served = %s"
-adr = ('3', )
-mycursor.execute(sql, adr)
-myresult = mycursor.fetchall()
-for x in myresult:
-    print(x)
-
-mycursor = mydb.cursor()
-sql = "SELECT * FROM trustee_database WHERE city_rep = %s"
-adr = ("Burlington", )
-mycursor.execute(sql, adr)
-myresult = mycursor.fetchall()
-for x in myresult:
-    print(x)
-
-"""
 print('\n')
-sql = "SELECT * FROM trustee_database ORDER BY time_served DESC"
+sql = "INSERT INTO trustee_database (name, time_served, city_rep) VALUES (%s, %s, %s)"
+val = ("Nicholas Gubert", 1, "Halton Hills")
+mycursor.execute(sql, val)
+mydb.commit()
+print("1 record inserted, ID:", mycursor.lastrowid)
+
+print('\n')
+sql = "SELECT * FROM trustee_database ORDER BY time_served"
 mycursor.execute(sql)
 myresult = mycursor.fetchall()
 for x in myresult:
@@ -66,7 +55,7 @@ for x in myresult:
     print(x)
 
 print('\n')
-sql = "SELECT name, COUNT(name) FROM trustee_database GROUP BY time_served HAVING COUNT(name) > 1"
+sql = "SELECT name, COUNT(name) FROM trustee_database GROUP BY name HAVING COUNT(name) > 1"
 mycursor.execute(sql)
 myresult = mycursor
 for x in myresult:
