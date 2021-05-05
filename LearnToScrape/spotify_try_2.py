@@ -59,14 +59,21 @@ for track in range(0, len(results)):
         playlist_tracks_artists.append(artist_list)
         playlist_tracks_first_artists.append(artist_list[0])
 
-# testing out formatting to see how I can retrieve each of the features   
-print(playlist_tracks_id)
-print('\n')
-print(playlist_tracks_titles)
-print('\n')
-print(playlist_tracks_artists)
-print('\n')
-print(playlist_tracks_first_artists)
+id_list = []
+tempo_list = []
+key_list = []
+
+for each_id in playlist_tracks_id:
+    feature = sp.audio_features(each_id)
+    id_list.append(feature[0]['id'])
+    tempo_list.append(feature[0]['tempo'])
+    key_list.append(feature[0]['key'])
+
+# create a dictionary of these items, and then create a dataframe
+dict_features = {'title': playlist_tracks_titles, 'artists': playlist_tracks_artists, 'first_artists': playlist_tracks_first_artists, 'id': id_list, 'tempo': tempo_list, 'key': key_list}
+features_df = pd.DataFrame(data=dict_features)
+pd.set_option("display.max_rows", None)
+print(features_df)
 
 """
 results = sp.user_playlist(username, playlist_id, 'tracks')
