@@ -43,9 +43,9 @@ for x in mycursor:
 """
 
 # this will create a column with a unique key for each record; the table exists though
-"""
+
 mycursor.execute("CREATE TABLE customers (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), address VARCHAR(255))")
-"""
+
 
 # we execute this instead since the table exists already
 """
